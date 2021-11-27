@@ -9,6 +9,7 @@ import (
 	"github.com/GokhanCagritekin/go-rest-api/pkg/listing"
 	"github.com/GokhanCagritekin/go-rest-api/pkg/rest"
 	"github.com/GokhanCagritekin/go-rest-api/pkg/storage"
+	"github.com/GokhanCagritekin/go-rest-api/task"
 )
 
 func main() {
@@ -16,6 +17,7 @@ func main() {
 	as := adding.NewService(r)
 	ls := listing.NewService(r)
 	mux := http.NewServeMux()
+	go task.StartTask()
 	mux.HandleFunc("/set", rest.HandleAdding(as))
 	mux.HandleFunc("/get", rest.HandleListing(ls))
 	fmt.Println("Starting server on port 8080")
