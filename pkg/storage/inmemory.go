@@ -1,7 +1,9 @@
 package storage
 
 import (
+	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"sync"
 )
 
@@ -36,4 +38,14 @@ func (s *Storage) Get(key string) (string, error) {
 		return "", ErrNotFound
 	}
 	return v, nil
+}
+
+func (s *Storage) Save() error {
+	_, err := json.Marshal(s.DB)
+	if err != nil {
+		return err
+	}
+	file, _ := json.MarshalIndent(s.DB, "", " ")
+	_ = ioutil.WriteFile("data.json", file, 0644)
+	return nil
 }
