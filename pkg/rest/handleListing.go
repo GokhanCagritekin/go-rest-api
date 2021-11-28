@@ -24,7 +24,6 @@ func HandleListing(ls listing.Service) func(w http.ResponseWriter, r *http.Reque
 			return
 		}
 		w.WriteHeader(http.StatusOK)
-		fmt.Println(val)
 		w.Write([]byte(val))
 	}
 }
