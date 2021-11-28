@@ -2,7 +2,6 @@ package saving
 
 import (
 	"context"
-	"fmt"
 	"time"
 )
 
@@ -25,6 +24,5 @@ func doEvery(ctx context.Context, d time.Duration, f func(time.Time, Service), s
 }
 
 func SaveData(t time.Time, ss Service) {
-	fmt.Println("yazıyorum")
 	ss.Save()
 }

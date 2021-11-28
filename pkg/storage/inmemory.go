@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"path/filepath"
 	"sync"
 )
 
@@ -22,7 +23,6 @@ func NewStorage() *Storage {
 }
 
 func (s *Storage) Set(key string, value string) {
-	s.lock.Lock()
 	defer s.lock.Unlock()
 	if s.DB == nil {
 		s.DB = make(map[string]string)
@@ -47,5 +47,27 @@ func (s *Storage) Save() error {
 	}
 	file, _ := json.MarshalIndent(s.DB, "", " ")
 	_ = ioutil.WriteFile("data.json", file, 0644)
+	return nil
+}
+
+func (s *Storage) Recover() error {
+	c := make(map[string]json.RawMessage)
+
+	absPath, _ := filepath.Abs("data.json")
+	data, err := ioutil.ReadFile(absPath)
+	if err != nil {
+		return err
+	}
+
+	e := json.Unmarshal(data, &c)
+	if e != nil {
+		panic(e)
+	}
+
+	i := 0
+	for k, v := range c {
+		s.Set(k, string(v))
+		i++
+	}
 	return nil
 }
