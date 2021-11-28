@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"errors"
 	"io/ioutil"
+	"os"
 	"path/filepath"
 	"sync"
 )
@@ -23,6 +24,7 @@ func NewStorage() *Storage {
 }
 
 func (s *Storage) Set(key string, value string) {
+	s.lock.Lock()
 	defer s.lock.Unlock()
 	if s.DB == nil {
 		s.DB = make(map[string]string)
@@ -68,6 +70,25 @@ func (s *Storage) Recover() error {
 	for k, v := range c {
 		s.Set(k, string(v))
 		i++
+	}
+	return nil
+}
+
+func (s *Storage) DeleteAll() error {
+	for k := range s.DB {
+		delete(s.DB, k)
+	}
+	err := removeFile("data.json")
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func removeFile(file string) error {
+	err := os.Remove(file)
+	if err != nil {
+		return err
 	}
 	return nil
 }
