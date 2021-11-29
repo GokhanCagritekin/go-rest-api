@@ -53,7 +53,7 @@ func (s *Storage) Save() error {
 }
 
 func (s *Storage) Recover() error {
-	c := make(map[string]json.RawMessage)
+	c := make(map[string]string)
 
 	absPath, _ := filepath.Abs("data.json")
 	data, err := ioutil.ReadFile(absPath)
@@ -68,7 +68,7 @@ func (s *Storage) Recover() error {
 
 	i := 0
 	for k, v := range c {
-		s.Set(k, string(v))
+		s.Set(k, v)
 		i++
 	}
 	return nil
