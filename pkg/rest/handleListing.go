@@ -20,7 +20,7 @@ func HandleListing(ls listing.Service) func(w http.ResponseWriter, r *http.Reque
 			http.Error(w, "not found", http.StatusNotFound)
 			return
 		} else if err != nil {
-			http.Error(w, fmt.Sprintf("error getting value from database: %s", err), http.StatusInternalServerError)
+			http.Error(w, fmt.Sprintf("error getting value from storage: %s", err), http.StatusInternalServerError)
 			return
 		}
 		w.WriteHeader(http.StatusOK)
